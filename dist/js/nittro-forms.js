@@ -417,7 +417,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 ;
 _context.invoke('Nittro.Forms', function (Form, Vendor) {
 
-    var Locator = _context.extend(function () {
+    var Locator = _context.extend('Nittro.Object', function () {
         this._ = {
             registry: {},
             anonId: 0

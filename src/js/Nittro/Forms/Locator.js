@@ -1,6 +1,6 @@
 _context.invoke('Nittro.Forms', function (Form, Vendor) {
 
-    var Locator = _context.extend(function () {
+    var Locator = _context.extend('Nittro.Object', function () {
         this._ = {
             registry: {},
             anonId: 0
