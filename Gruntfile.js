@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 
     var files = [
         'src/js/Nittro/Forms/Vendor.js',
+        'src/js/Nittro/Forms/FormData.js',
         'src/js/Nittro/Forms/Form.js',
         'src/js/Nittro/Forms/Locator.js',
         'src/js/Nittro/Forms/Bridges/FormsDI.js'
