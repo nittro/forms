@@ -300,6 +300,5 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 }, {
     DOM: 'Utils.DOM',
     Arrays: 'Utils.Arrays',
-    DateTime: 'Utils.DateTime',
-    FormData: 'Nittro.Ajax.FormData'
+    DateTime: 'Utils.DateTime'
 });
