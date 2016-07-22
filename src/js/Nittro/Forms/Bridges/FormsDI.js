@@ -5,7 +5,7 @@ _context.invoke('Nittro.Forms.Bridges', function(Nittro) {
     }
 
     var FormsDI = _context.extend('Nittro.DI.BuilderExtension', function(containerBuilder, config) {
-        FormsDI.Super.call(containerBuilder, config);
+        FormsDI.Super.call(this, containerBuilder, config);
     }, {
         load: function() {
             var builder = this._getContainerBuilder();
