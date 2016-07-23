@@ -1,0 +1,15 @@
+{
+    "files": {
+        "js": [
+            "src/js/Nittro/Forms/Vendor.js",
+            "src/js/Nittro/Forms/FormData.js",
+            "src/js/Nittro/Forms/Form.js",
+            "src/js/Nittro/Forms/Locator.js",
+            "src/js/Nittro/Forms/Bridges/FormsDI.js"
+        ]
+    },
+    "compat": {
+        "es5": true,
+        "formData": true
+    }
+}
