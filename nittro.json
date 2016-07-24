@@ -8,6 +8,7 @@
             "src/js/Nittro/Forms/Bridges/FormsDI.js"
         ]
     },
+    "di": "Nittro.Forms.Bridges.FormsDI()",
     "compat": {
         "es5": true,
         "formData": true
