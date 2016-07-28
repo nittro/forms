@@ -27,6 +27,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
             if (!(id in this._.registry)) {
                 this._.registry[id] = new Form(elem || id);
                 this._.registry[id].on('error:default', this._handleError.bind(this));
+                this.trigger('form-added', { form: this._.registry[id] });
 
             }
 
@@ -41,6 +42,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
             }
 
             if (id in this._.registry) {
+                this.trigger('form-removed', { form: this._.registry[id] });
                 delete this._.registry[id];
 
             }

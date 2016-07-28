@@ -240,8 +240,8 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 evt = new Event('submit', {bubbles: true, cancelable: true});
 
             } catch (e) {
-            evt = document.createEvent('HTMLEvents');
-            evt.initEvent('submit', true, true);
+                evt = document.createEvent('HTMLEvents');
+                evt.initEvent('submit', true, true);
 
             }
 
