@@ -1,4 +1,4 @@
-_context.invoke('Nittro.Forms', function (DOM, Arrays) {
+_context.invoke('Nittro.Forms', function () {
 
     if (!window.Nette || !window.Nette.validators) {
         throw new Error('Nette/Forms vendor netteForms.js asset has not been loaded');
@@ -29,9 +29,6 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays) {
 
     };
 
-}, {
-    DOM: 'Utils.DOM',
-    Arrays: 'Utils.Arrays'
 });
 ;
 _context.invoke('Nittro.Forms', function(undefined) {
@@ -352,8 +349,8 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 evt = new Event('submit', {bubbles: true, cancelable: true});
 
             } catch (e) {
-            evt = document.createEvent('HTMLEvents');
-            evt.initEvent('submit', true, true);
+                evt = document.createEvent('HTMLEvents');
+                evt.initEvent('submit', true, true);
 
             }
 
@@ -444,6 +441,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
             if (!(id in this._.registry)) {
                 this._.registry[id] = new Form(elem || id);
                 this._.registry[id].on('error:default', this._handleError.bind(this));
+                this.trigger('form-added', { form: this._.registry[id] });
 
             }
 
@@ -458,6 +456,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
             }
 
             if (id in this._.registry) {
+                this.trigger('form-removed', { form: this._.registry[id] });
                 delete this._.registry[id];
 
             }
@@ -480,38 +479,5 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
     });
 
     _context.register(Locator, 'Locator');
-
-});
-;
-_context.invoke('Nittro.Forms.Bridges', function(Nittro) {
-
-    if (!Nittro.DI) {
-        return;
-    }
-
-    var FormsDI = _context.extend('Nittro.DI.BuilderExtension', function(containerBuilder, config) {
-        FormsDI.Super.call(this, containerBuilder, config);
-    }, {
-        load: function() {
-            var builder = this._getContainerBuilder();
-            builder.addServiceDefinition('formLocator', 'Nittro.Forms.Locator()');
-
-        },
-
-        setup: function () {
-            var builder = this._getContainerBuilder();
-
-            if (builder.hasServiceDefinition('flashes')) {
-                builder.getServiceDefinition('formLocator')
-                    .addSetup(function(flashes) {
-                        this.on('error', function(evt) {
-                            flashes.add(evt.data.elem, 'warning', evt.data.message);
-                        });
-                    });
-            }
-        }
-    });
-
-    _context.register(FormsDI, 'FormsDI')
 
 });

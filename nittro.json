@@ -4,11 +4,24 @@
             "src/js/Nittro/Forms/Vendor.js",
             "src/js/Nittro/Forms/FormData.js",
             "src/js/Nittro/Forms/Form.js",
-            "src/js/Nittro/Forms/Locator.js",
-            "src/js/Nittro/Forms/Bridges/FormsDI.js"
+            "src/js/Nittro/Forms/Locator.js"
         ]
     },
-    "di": "Nittro.Forms.Bridges.FormsDI()",
+    "bridges": {
+        "nittro-di": {
+            "files": [
+                "src/js/Nittro/Forms/Bridges/FormsDI/FormsExtension.js"
+            ],
+            "extensions": {
+                "forms": "Nittro.Forms.Bridges.FormsDI.FormsExtension()"
+            }
+        },
+        "nittro-page": {
+            "files": [
+                "src/js/Nittro/Forms/Bridges/FormsPage/FormsMixin.js"
+            ]
+        }
+    },
     "compat": {
         "es5": true,
         "formData": true

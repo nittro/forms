@@ -1,4 +1,4 @@
-_context.invoke('Nittro.Forms', function (DOM, Arrays) {
+_context.invoke('Nittro.Forms', function () {
 
     if (!window.Nette || !window.Nette.validators) {
         throw new Error('Nette/Forms vendor netteForms.js asset has not been loaded');
@@ -29,7 +29,4 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays) {
 
     };
 
-}, {
-    DOM: 'Utils.DOM',
-    Arrays: 'Utils.Arrays'
 });

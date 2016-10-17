@@ -1,11 +1,7 @@
-_context.invoke('Nittro.Forms.Bridges', function(Nittro) {
+_context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
 
-    if (!Nittro.DI) {
-        return;
-    }
-
-    var FormsDI = _context.extend('Nittro.DI.BuilderExtension', function(containerBuilder, config) {
-        FormsDI.Super.call(this, containerBuilder, config);
+    var FormsExtension = _context.extend('Nittro.DI.BuilderExtension', function(containerBuilder, config) {
+        FormsExtension.Super.call(this, containerBuilder, config);
     }, {
         load: function() {
             var builder = this._getContainerBuilder();
@@ -24,9 +20,15 @@ _context.invoke('Nittro.Forms.Bridges', function(Nittro) {
                         });
                     });
             }
+
+            if (builder.hasServiceDefinition('page')) {
+                builder.getServiceDefinition('page')
+                    .addSetup('::initForms()');
+
+            }
         }
     });
 
-    _context.register(FormsDI, 'FormsDI')
+    _context.register(FormsExtension, 'FormsExtension')
 
 });
