@@ -401,6 +401,28 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
             this.trigger('reset');
 
+        },
+
+        _handleError: function (evt) {
+            var container;
+
+            if (evt.data.elem) {
+                container = DOM.getById(evt.data.elem.id + '-errors');
+
+                if (typeof evt.data.elem.focus === 'function') {
+                    evt.data.elem.focus();
+                }
+            }
+
+            if (!container) {
+                container = DOM.getById(this._.form.id + '-errors');
+            }
+
+            if (container) {
+                var elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p');
+                elem.textContent = evt.data.message;
+                container.appendChild(elem);
+            }
         }
     });
 
@@ -440,7 +462,6 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
 
             if (!(id in this._.registry)) {
                 this._.registry[id] = new Form(elem || id);
-                this._.registry[id].on('error:default', this._handleError.bind(this));
                 this.trigger('form-added', { form: this._.registry[id] });
 
             }
@@ -465,16 +486,6 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
         _forwardError: function (elem, msg) {
             var frm = this.getForm(elem.form);
             frm.trigger('error', {elem: elem, message: msg});
-
-        },
-
-        _handleError: function (evt) {
-            this.trigger('error', { elem: evt.data.elem, message: evt.data.message });
-
-            if (evt.data.elem && typeof evt.data.elem.focus === 'function') {
-                evt.data.elem.focus();
-
-            }
         }
     });
 

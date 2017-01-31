@@ -12,15 +12,6 @@ _context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
         setup: function () {
             var builder = this._getContainerBuilder();
 
-            if (builder.hasServiceDefinition('flashes')) {
-                builder.getServiceDefinition('formLocator')
-                    .addSetup(function(flashes) {
-                        this.on('error', function(evt) {
-                            flashes.add(evt.data.elem, 'warning', evt.data.message);
-                        });
-                    });
-            }
-
             if (builder.hasServiceDefinition('page')) {
                 builder.getServiceDefinition('page')
                     .addSetup('::initForms()');

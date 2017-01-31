@@ -292,6 +292,28 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
             this.trigger('reset');
 
+        },
+
+        _handleError: function (evt) {
+            var container;
+
+            if (evt.data.elem) {
+                container = DOM.getById(evt.data.elem.id + '-errors');
+
+                if (typeof evt.data.elem.focus === 'function') {
+                    evt.data.elem.focus();
+                }
+            }
+
+            if (!container) {
+                container = DOM.getById(this._.form.id + '-errors');
+            }
+
+            if (container) {
+                var elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p');
+                elem.textContent = evt.data.message;
+                container.appendChild(elem);
+            }
         }
     });
 
