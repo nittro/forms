@@ -19,6 +19,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
         DOM.addListener(this._.form, 'submit', this._handleSubmit.bind(this));
         DOM.addListener(this._.form, 'reset', this._handleReset.bind(this));
+        this.on('error:default', this._handleError.bind(this));
 
     }, {
         getElement: function (name) {
