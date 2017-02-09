@@ -1,4 +1,4 @@
-_context.invoke('Nittro.Forms', function (Form, Vendor) {
+_context.invoke('Nittro.Forms', function (Form, Vendor, DOM) {
 
     var Locator = _context.extend('Nittro.Object', function () {
         this._ = {
@@ -7,6 +7,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
         };
 
         Vendor.addError = this._forwardError.bind(this);
+        DOM.addListener(document, 'blur', this._handleBlur.bind(this), true);
 
     }, {
         getForm: function (id) {
@@ -48,11 +49,18 @@ _context.invoke('Nittro.Forms', function (Form, Vendor) {
         },
 
         _forwardError: function (elem, msg) {
-            var frm = this.getForm(elem.form);
-            frm.trigger('error', {elem: elem, message: msg});
+            this.getForm(elem.form).trigger('error', {element: elem, message: msg});
+        },
+
+        _handleBlur: function (evt) {
+            if (evt.target.form && evt.target.form instanceof HTMLFormElement) {
+                this.getForm(evt.target.form).trigger('blur', { element: evt.target });
+            }
         }
     });
 
     _context.register(Locator, 'Locator');
 
+}, {
+    DOM: 'Utils.DOM'
 });

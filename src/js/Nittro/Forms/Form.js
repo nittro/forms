@@ -16,10 +16,12 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         this._.form = form;
         this._.form.noValidate = 'novalidate';
         this._.submittedBy = null;
+        this._.validationMode = DOM.getData(form, 'validation-mode');
 
         DOM.addListener(this._.form, 'submit', this._handleSubmit.bind(this));
         DOM.addListener(this._.form, 'reset', this._handleReset.bind(this));
         this.on('error:default', this._handleError.bind(this));
+        this.on('blur:default', this._handleBlur.bind(this));
 
     }, {
         getElement: function (name) {
@@ -296,25 +298,37 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         _handleError: function (evt) {
-            var container;
+            var container = this._getErrorContainer(evt.data.elem);
 
-            if (evt.data.elem) {
-                container = DOM.getById(evt.data.elem.id + '-errors');
-
-                if (typeof evt.data.elem.focus === 'function') {
-                    evt.data.elem.focus();
-                }
-            }
-
-            if (!container) {
-                container = DOM.getById(this._.form.id + '-errors');
+            if (evt.data.element && typeof evt.data.element.focus === 'function') {
+                evt.data.element.focus();
             }
 
             if (container) {
-                var elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p');
+                var elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p', {'class': 'error'});
                 elem.textContent = evt.data.message;
                 container.appendChild(elem);
             }
+        },
+
+        _handleBlur: function (evt) {
+            var container = this._getErrorContainer(evt.data.element);
+
+            if (container) {
+                DOM.getByClassName('error', container)
+                    .forEach(function (elem) {
+                        elem.parentNode.removeChild(elem);
+                    });
+            }
+
+            if (DOM.getData(evt.data.element, 'validation-mode', this._.validationMode) === 'live') {
+                Vendor.validateControl(evt.data.element);
+            }
+        },
+
+        _getErrorContainer: function (elem) {
+            var container = elem && elem.id ? DOM.getById(elem.id + '-errors') : null;
+            return container || DOM.getById(this._.form.id + '-errors') || (elem ? elem.parentNode : null);
         }
     });
 
