@@ -298,7 +298,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         _handleError: function (evt) {
-            var container = this._getErrorContainer(evt.data.elem);
+            var container = this._getErrorContainer(evt.data.element);
 
             if (evt.data.element && typeof evt.data.element.focus === 'function') {
                 evt.data.element.focus();
