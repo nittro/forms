@@ -10,5 +10,11 @@
         "url": "https://github.com/nittro/forms/issues",
         "email": "nittro@nittro.org"
     },
-    "devDependencies": {}
+    "dependencies": {
+        "nittro-core": "master",
+        "nette-forms": "^2.4.0"
+    },
+    "devDependencies": {
+        "nittro-di": "master"
+    }
 }
