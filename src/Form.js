@@ -3,27 +3,37 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
     var Form = _context.extend('Nittro.Object', function (form) {
         Form.Super.call(this);
 
-        if (typeof form === 'string') {
-            form = DOM.getById(form);
-
-        }
-
-        if (!form || !(form instanceof HTMLFormElement)) {
-            throw new TypeError('Invalid argument, must be a HTMLFormElement');
-
-        }
-
-        this._.form = form;
-        this._.form.noValidate = 'novalidate';
         this._.submittedBy = null;
-        this._.validationMode = DOM.getData(form, 'validation-mode');
+        this._handleSubmit = this._handleSubmit.bind(this);
+        this._handleReset = this._handleReset.bind(this);
 
-        DOM.addListener(this._.form, 'submit', this._handleSubmit.bind(this));
-        DOM.addListener(this._.form, 'reset', this._handleReset.bind(this));
+        this.setElement(form);
+
         this.on('error:default', this._handleError.bind(this));
         this.on('blur:default', this._handleBlur.bind(this));
 
     }, {
+        setElement: function (form) {
+            if (typeof form === 'string') {
+                form = DOM.getById(form);
+
+            }
+
+            if (!form || !(form instanceof HTMLFormElement)) {
+                throw new TypeError('Invalid argument, must be a HTMLFormElement');
+
+            }
+
+            this._.form = form;
+            this._.form.noValidate = 'novalidate';
+            this._.validationMode = DOM.getData(form, 'validation-mode');
+
+            DOM.addListener(this._.form, 'submit', this._handleSubmit);
+            DOM.addListener(this._.form, 'reset', this._handleReset);
+
+            return this;
+        },
+
         getElement: function (name) {
             return name ? this._.form.elements.namedItem(name) : this._.form;
 
@@ -237,6 +247,13 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
         },
 
+        destroy: function () {
+            this.off();
+            DOM.removeListener(this._.form, 'submit', this._handleSubmit);
+            DOM.removeListener(this._.form, 'reset', this._handleReset);
+            this._.form = null;
+        },
+
         _handleSubmit: function (evt) {
             if (this.trigger('submit').isDefaultPrevented()) {
                 evt.preventDefault();
@@ -275,14 +292,20 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         _handleError: function (evt) {
-            var container = this._getErrorContainer(evt.data.element);
+            var container = this._getErrorContainer(evt.data.element),
+                elem;
 
             if (evt.data.element && typeof evt.data.element.focus === 'function') {
                 evt.data.element.focus();
             }
 
             if (container) {
-                var elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p', {'class': 'error'});
+                if (evt.data.element && evt.data.element.parentNode === container) {
+                    elem = DOM.create('span', {'class': 'error'});
+                } else {
+                    elem = DOM.create(container.tagName.match(/^(ul|ol)$/i) ? 'li' : 'p', {'class': 'error'});
+                }
+
                 elem.textContent = evt.data.message;
                 container.appendChild(elem);
             }

@@ -6,7 +6,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
             DOM.addListener(document, 'submit', this._handleSubmit.bind(this));
             DOM.addListener(document, 'click', this._handleButtonClick.bind(this));
-            this._.snippetManager.on('before-update', this._cleanupForms.bind(this));
+            this._.snippetManager.on('after-update', this._cleanupForms.bind(this));
 
         },
 
@@ -57,29 +57,8 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
         },
 
-        _cleanupForms: function(evt) {
-            ['remove', 'update'].forEach(function(action) {
-                var id, elem;
-
-                for (id in evt.data[action]) {
-                    if (evt.data[action].hasOwnProperty(id)) {
-                        elem = evt.data[action][id].element;
-
-                        if (elem.tagName.toLowerCase() === 'form') {
-                            this._.formLocator.removeForm(elem);
-
-                        } else {
-                            var forms = elem.getElementsByTagName('form'),
-                                i;
-
-                            for (i = 0; i < forms.length; i++) {
-                                this._.formLocator.removeForm(forms.item(i));
-
-                            }
-                        }
-                    }
-                }
-            }.bind(this));
+        _cleanupForms: function() {
+            this._.formLocator.refreshForms();
         }
     };
 
