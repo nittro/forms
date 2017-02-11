@@ -57,7 +57,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM) {
 
                     if (elem) {
                         if (elem !== this._.registry[id].getElement()) {
-                            this._.registry.setElement(elem);
+                            this._.registry[id].setElement(elem);
                         }
                     } else {
                         this.removeForm(id);
