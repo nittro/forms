@@ -41,6 +41,18 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         validate: function () {
+            var container;
+
+            for (var i = 0, names = this._getFieldNames(); i < names.length; i++) {
+                container = this._getErrorContainer(this.getElement(names[i]));
+
+                if (container) {
+                    DOM.getByClassName('error', container).forEach(function(elem) {
+                        elem.parentNode.removeChild(elem);
+                    });
+                }
+            }
+
             if (!Vendor.validateForm(this._.form)) {
                 return false;
 
@@ -52,20 +64,14 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         setValues: function (values, reset) {
-            var i, elem, name, value, names = [];
+            var names = this._getFieldNames(),
+                name, value, i;
+
             values || (values = {});
 
-            for (i = 0; i < this._.form.elements.length; i++) {
-                elem = this._.form.elements.item(i);
-                name = elem.name;
+            for (i = 0; i < names.length; i++) {
+                name = names[i];
                 value = undefined;
-
-                if (!name || names.indexOf(name) > -1 || elem.tagName.toLowerCase() === 'button' || elem.type in {'submit':1, 'reset':1, 'button':1, 'image':1}) {
-                    continue;
-
-                }
-
-                names.push(name);
 
                 if (name.indexOf('[') > -1) {
                     value = values;
@@ -175,26 +181,15 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         serialize: function () {
             var elem, i,
                 data = new FormData(),
-                names = [],
+                names = this._getFieldNames(true),
                 value;
 
-            for (i = 0; i < this._.form.elements.length; i++) {
-                elem = this._.form.elements.item(i);
-
-                if (elem.name && names.indexOf(elem.name) === -1 && (elem.type === 'submit' && elem.name === this._.submittedBy || !(elem.type in {submit: 1, button: 1, reset: 1}))) {
-                    names.push(elem.name);
-
-                }
+            if (this._.submittedBy) {
+                names.push(this._.submittedBy);
             }
 
             for (i = 0; i < names.length; i++) {
                 elem = this._.form.elements.namedItem(names[i]);
-
-                if (Vendor.isDisabled(elem)) {
-                    continue;
-
-                }
-
                 value = Vendor.getEffectiveValue(elem);
 
                 if (Array.isArray(value) || value instanceof FileList) {
@@ -221,34 +216,16 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 var btn = this._.form.elements.namedItem(by);
 
                 if (btn && btn.type === 'submit') {
-                    try {
-                        evt = new MouseEvent('click', {bubbles: true, cancelable: true, view: window});
-
-                    } catch (e) {
-                    evt = document.createEvent('MouseEvents');
-                    evt.initMouseEvent('click', true, true, window);
-
-                    }
-
-                    btn.dispatchEvent(evt);
-                    return this;
+                    DOM.trigger(btn, 'click');
 
                 } else {
                     throw new TypeError('Unknown element or not a submit button: ' + by);
 
                 }
-            }
-
-            try {
-                evt = new Event('submit', {bubbles: true, cancelable: true});
-
-            } catch (e) {
-                evt = document.createEvent('HTMLEvents');
-                evt.initEvent('submit', true, true);
+            } else {
+                DOM.trigger(this._.form, 'submit');
 
             }
-
-            this._.form.dispatchEvent(evt);
 
             return this;
 
@@ -285,7 +262,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 elem = this._.form.elements.item(i);
 
                 if (elem.type === 'hidden' && elem.hasAttribute('data-default-value')) {
-                    this.setValue(elem, DOM.getData(elem, 'default-value') || '');
+                    this.setValue(elem, DOM.getData(elem, 'default-value'));
 
                 } else if (elem.type === 'file') {
                     this.setValue(elem, null);
@@ -324,6 +301,22 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             if (DOM.getData(evt.data.element, 'validation-mode', this._.validationMode) === 'live') {
                 Vendor.validateControl(evt.data.element);
             }
+        },
+
+        _getFieldNames: function (enabledOnly) {
+            var elem, i,
+                names = [];
+
+            for (i = 0; i < this._.form.elements.length; i++) {
+                elem = this._.form.elements.item(i);
+
+                if (elem.name && (!enabledOnly || !elem.disabled) && names.indexOf(elem.name) === -1 && !(elem.type in {submit: 1, button: 1, reset: 1})) {
+                    names.push(elem.name);
+
+                }
+            }
+
+            return names;
         },
 
         _getErrorContainer: function (elem) {
