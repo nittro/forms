@@ -53,7 +53,11 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
         },
 
         _checkForm: function (form) {
-            return this._.options.whitelistForms ? DOM.hasClass(form, 'ajax') : !DOM.hasClass(form, 'noajax');
+            if (form.getAttribute('target')) {
+                return false;
+            }
+
+            return DOM.getData(form, 'ajax', !this._.options.whitelistForms);
 
         },
 
