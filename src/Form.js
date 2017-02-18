@@ -188,6 +188,10 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
         },
 
+        getValue: function (name) {
+            return Vendor.getEffectiveValue(this.getElement(name));
+        },
+
         serialize: function () {
             var elem, i,
                 data = new FormData(),
