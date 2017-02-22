@@ -252,6 +252,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         destroy: function () {
+            this.trigger('destroy');
             this.off();
             DOM.removeListener(this._.form, 'submit', this._handleSubmit);
             DOM.removeListener(this._.form, 'reset', this._handleReset);

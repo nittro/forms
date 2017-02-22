@@ -17,10 +17,13 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
                     event: evt,
                     element: form
                 })
-                .then(function () {
-                    frm.reset();
+                .then(this._handleSuccess.bind(this, frm));
+        },
 
-                });
+        _handleSuccess: function (frm) {
+            if (frm.getElement() && DOM.getData(frm.getElement(), 'reset', this._.options.autoResetForms)) {
+                frm.reset();
+            }
         },
 
         _handleSubmit: function (evt) {
@@ -68,6 +71,9 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
     _context.register(FormsMixin, 'FormsMixin');
     _context.mixin(Service, FormsMixin);
+
+    Service.defaults.whitelistForms = false;
+    Service.defaults.autoResetForms = true;
 
 }, {
     Service: 'Nittro.Page.Service',
