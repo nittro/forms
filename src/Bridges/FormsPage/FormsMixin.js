@@ -17,10 +17,10 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
                     event: evt,
                     element: form
                 })
-                .then(this._handleSuccess.bind(this, frm));
+                .then(this._handleFormSuccess.bind(this, frm));
         },
 
-        _handleSuccess: function (frm) {
+        _handleFormSuccess: function (frm) {
             if (frm.getElement() && DOM.getData(frm.getElement(), 'reset', this._.options.autoResetForms)) {
                 frm.reset();
             }
