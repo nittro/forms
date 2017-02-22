@@ -15,7 +15,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
 
             builder.addServiceDefinition('formLocator', {
                 factory: 'Nittro.Forms.Locator()',
-                arguments: {
+                args: {
                     options: config
                 }
             });
