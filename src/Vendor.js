@@ -14,14 +14,14 @@ _context.invoke('Nittro.Forms', function () {
         }
 
         if (!Array.isArray(arg)) {
-            arg = arg.trim().split(/\s*,\s*/);
+            arg = arg.trim().split(/\s*,\s*/g);
         }
 
         try {
             if (!val.length) return false;
 
             for (var i = 0; i < val.length; i++) {
-                if (val.item(i).type && arg.indexOf(val.item(i).type) === -1 && arg.indexOf(val.item(i).type.replace(/\/.*/, '/*')) === -1) {
+                if (val[i].type && arg.indexOf(val[i].type) === -1 && arg.indexOf(val[i].type.replace(/\/.*/, '/*')) === -1) {
                     return false;
 
                 }
