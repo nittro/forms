@@ -9,7 +9,7 @@ _context.invoke('Nittro.Forms', function () {
     _context.register(VendorForms, 'Vendor');
 
     VendorForms.validators.mimeType = function(elem, arg, val) {
-        if (!val || !window.FileList || !(val instanceof window.FileList)) {
+        if (!val || !window.File || val.length && !(val[0] instanceof window.File)) {
             return true;
         }
 
