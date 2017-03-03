@@ -4,6 +4,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         Form.Super.call(this);
 
         this._.submittedBy = null;
+        this._.inLiveValidation = false;
         this._handleSubmit = this._handleSubmit.bind(this);
         this._handleReset = this._handleReset.bind(this);
 
@@ -224,8 +225,6 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         submit: function (by) {
-            var evt;
-
             if (by) {
                 var btn = this._.form.elements.namedItem(by);
 
@@ -300,7 +299,7 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             var container = this._getErrorContainer(evt.data.element),
                 elem;
 
-            if (evt.data.element && typeof evt.data.element.focus === 'function') {
+            if (!this._.inLiveValidation && evt.data.element && typeof evt.data.element.focus === 'function') {
                 evt.data.element.focus();
             }
 
@@ -327,7 +326,9 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             }
 
             if (DOM.getData(evt.data.element, 'validation-mode', this._.validationMode) === 'live') {
+                this._.inLiveValidation = true;
                 Vendor.validateControl(evt.data.element);
+                this._.inLiveValidation = false;
             }
         },
 
