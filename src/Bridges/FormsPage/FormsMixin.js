@@ -1,8 +1,10 @@
 _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
     var FormsMixin = {
-        initForms: function (formLocator) {
+        initForms: function (formLocator, options) {
             this._.formLocator = formLocator;
+            this._.options.whitelistForms = options.whitelistForms;
+            this._.options.autoResetForms = options.autoResetForms;
 
             DOM.addListener(document, 'submit', this._handleSubmit.bind(this));
             DOM.addListener(document, 'click', this._handleButtonClick.bind(this));

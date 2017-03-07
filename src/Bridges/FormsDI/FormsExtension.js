@@ -5,29 +5,26 @@ _context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
     }, {
         STATIC: {
             defaults: {
-                validateMimeType: true
+                whitelistForms: false,
+                autoResetForms: true
             }
         },
 
         load: function() {
-            var builder = this._getContainerBuilder(),
-                config = this._getConfig(FormsExtension.defaults);
-
-            builder.addServiceDefinition('formLocator', {
-                factory: 'Nittro.Forms.Locator()',
-                args: {
-                    options: config
-                }
-            });
+            var builder = this._getContainerBuilder();
+            builder.addServiceDefinition('formLocator', 'Nittro.Forms.Locator()');
 
         },
 
         setup: function () {
-            var builder = this._getContainerBuilder();
+            var builder = this._getContainerBuilder(),
+                config = this._getConfig(FormsExtension.defaults);
 
             if (builder.hasServiceDefinition('page')) {
                 builder.getServiceDefinition('page')
-                    .addSetup('::initForms()');
+                    .addSetup(function (formLocator) {
+                        this.initForms(formLocator, config);
+                    });
 
             }
         }

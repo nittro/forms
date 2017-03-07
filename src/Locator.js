@@ -1,26 +1,15 @@
 _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
-    var Locator = _context.extend('Nittro.Object', function (options) {
+    var Locator = _context.extend('Nittro.Object', function () {
         this._ = {
-            options: Arrays.mergeTree({}, Locator.defaults, options),
             registry: {},
             anonId: 0
         };
-
-        if (!this._.options.validateMimeType) {
-            delete Vendor.validators.mimeType;
-        }
 
         Vendor.addError = this._forwardError.bind(this);
         DOM.addListener(document, 'blur', this._handleBlur.bind(this), true);
 
     }, {
-        STATIC: {
-            defaults: {
-                validateMimeType: true
-            }
-        },
-
         getForm: function (id) {
             var elem;
 
