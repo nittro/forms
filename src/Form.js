@@ -29,6 +29,10 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
             this._.form.noValidate = 'novalidate';
             this._.validationMode = DOM.getData(form, 'validation-mode');
 
+            if (this._.submittedBy) {
+                this._.form['nette-submittedBy'] = this.getElement(this._.submittedBy);
+            }
+
             DOM.addListener(this._.form, 'submit', this._handleSubmit);
             DOM.addListener(this._.form, 'reset', this._handleReset);
 
@@ -46,12 +50,18 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         setSubmittedBy: function (value) {
-            this._.submittedBy = value;
+            if (value) {
+                this._.submittedBy = value;
+                this._.form['nette-submittedBy'] = this.getElement(value);
+            } else {
+                this._.submittedBy = this._.form['nette-submittedBy'] = null;
+            }
+
             return this;
 
         },
 
-        validate: function () {
+        validate: function (sender) {
             var container;
 
             for (var i = 0, names = this._getFieldNames(); i < names.length; i++) {
@@ -64,12 +74,15 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
                 }
             }
 
-            if (!Vendor.validateForm(this._.form)) {
+            if (!Vendor.validateForm(sender || this._.form)) {
                 return false;
 
             }
 
-            var evt = this.trigger('validate');
+            var evt = this.trigger('validate', {
+                sender: sender
+            });
+
             return !evt.isDefaultPrevented();
 
         },
@@ -265,7 +278,9 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
             }
 
-            if (!this.validate()) {
+            var sender = this._.submittedBy ? this.getElement(this._.submittedBy) : null;
+
+            if (!this.validate(sender)) {
                 evt.preventDefault();
 
             }
@@ -290,6 +305,8 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
 
                 }
             }
+
+            this._.submittedBy = this._.form['nette-submittedBy'] = null;
 
             this.trigger('reset');
 
