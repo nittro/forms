@@ -1,9 +1,10 @@
 _context.invoke('Nittro.Forms', function(undefined) {
 
     var FormData = _context.extend(function() {
-        this._dataStorage = [];
-        this._upload = false;
-
+        this._ = {
+            dataStorage: [],
+            upload: false
+        };
     }, {
         append: function(name, value) {
             if (value === undefined || value === null) {
@@ -12,7 +13,7 @@ _context.invoke('Nittro.Forms', function(undefined) {
             }
 
             if (this._isFile(value)) {
-                this._upload = true;
+                this._.upload = true;
 
             } else if (typeof value === 'object' && 'valueOf' in value && /string|number|boolean/.test(typeof value.valueOf()) && !arguments[2]) {
                 return this.append(name, value.valueOf(), true);
@@ -22,14 +23,14 @@ _context.invoke('Nittro.Forms', function(undefined) {
 
             }
 
-            this._dataStorage.push({ name: name, value: value });
+            this._.dataStorage.push({ name: name, value: value });
 
             return this;
 
         },
 
         isUpload: function() {
-            return this._upload;
+            return this._.upload;
 
         },
 
@@ -53,15 +54,18 @@ _context.invoke('Nittro.Forms', function(undefined) {
                 var fd = new window.FormData(),
                     i;
 
-                for (i = 0; i < this._dataStorage.length; i++) {
-                    fd.append(this._dataStorage[i].name, this._dataStorage[i].value);
-
+                for (i = 0; i < this._.dataStorage.length; i++) {
+                    if (typeof this._.dataStorage[i].value === 'boolean') {
+                        fd.append(this._.dataStorage[i].name, this._.dataStorage[i].value ? 1 : 0);
+                    } else {
+                        fd.append(this._.dataStorage[i].name, this._.dataStorage[i].value);
+                    }
                 }
 
                 return fd;
 
             } else {
-                return this._dataStorage.filter(function(e) {
+                return this._.dataStorage.filter(function(e) {
                     return !this._isFile(e.value);
 
                 }, this);
