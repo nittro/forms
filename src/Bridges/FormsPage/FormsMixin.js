@@ -9,7 +9,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
             DOM.addListener(document, 'submit', this._handleSubmit.bind(this));
             DOM.addListener(document, 'click', this._handleButtonClick.bind(this));
             this._.snippetManager.on('after-update', this._cleanupForms.bind(this));
-
+            this.on('transaction-created', this._initFormTransaction.bind(this));
         },
 
         sendForm: function (form, evt) {
@@ -22,9 +22,29 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
                 .then(this._handleFormSuccess.bind(this, frm));
         },
 
-        _handleFormSuccess: function (frm) {
-            if (frm.getElement() && DOM.getData(frm.getElement(), 'reset', this._.options.autoResetForms)) {
-                frm.reset();
+        _initFormTransaction: function (evt) {
+            if (evt.data.context.element && evt.data.context.element instanceof HTMLFormElement) {
+                var data = {
+                    form: this._.formLocator.getForm(evt.data.context.element),
+                    allowReset: true
+                };
+
+                evt.data.transaction.on('ajax-response', this._handleFormResponse.bind(this, data));
+                evt.data.transaction.then(this._handleFormSuccess.bind(this, data));
+            }
+        },
+
+        _handleFormResponse: function (data, evt) {
+            var payload = evt.data.response.getPayload();
+
+            if ('allowReset' in payload) {
+                data.allowReset = payload.allowReset;
+            }
+        },
+
+        _handleFormSuccess: function (data) {
+            if (data.allowReset && data.form.getElement() && DOM.getData(data.form.getElement(), 'reset', this._.options.autoResetForms)) {
+                data.form.reset();
             }
         },
 
