@@ -30,7 +30,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
                 };
 
                 evt.data.transaction.on('ajax-response', this._handleFormResponse.bind(this, data));
-                evt.data.transaction.then(this._handleFormSuccess.bind(this, data));
+                evt.data.transaction.then(this._handleFormSuccess.bind(this, data), function() { /* noop on transaction error */ });
             }
         },
 
