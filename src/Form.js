@@ -1,5 +1,7 @@
 _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendor, undefined) {
 
+    var FileList = window.FileList || function() {};
+
     var Form = _context.extend('Nittro.Object', function (form) {
         Form.Super.call(this);
 
