@@ -49,7 +49,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
         },
 
         _handleSubmit: function (evt) {
-            if (evt.defaultPrevented || !(evt.target instanceof HTMLFormElement) || !this._checkForm(evt.target) || !this._checkUrl(evt.target.action, null, true)) {
+            if (evt.defaultPrevented || !(evt.target instanceof HTMLFormElement) || !this._checkForm(evt.target)) {
                 return;
             }
 
