@@ -8,7 +8,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
             DOM.addListener(document, 'submit', this._handleSubmit.bind(this));
             DOM.addListener(document, 'click', this._handleButtonClick.bind(this));
-            this._.snippetManager.on('after-update', this._cleanupForms.bind(this));
+            this._.snippetManager.on('after-update', this._refreshForms.bind(this));
             this.on('transaction-created', this._initFormTransaction.bind(this));
         },
 
@@ -85,7 +85,7 @@ _context.invoke('Nittro.Forms.Bridges.FormsPage', function(Service, DOM) {
 
         },
 
-        _cleanupForms: function() {
+        _refreshForms: function() {
             this._.formLocator.refreshForms();
         }
     };

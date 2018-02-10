@@ -18,7 +18,6 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
                 if (!elem.getAttribute('id')) {
                     elem.setAttribute('id', 'frm-anonymous' + (++this._.anonId));
-
                 }
 
                 id = elem.getAttribute('id');
@@ -37,14 +36,12 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
         removeForm: function (id) {
             if (typeof id !== 'string') {
                 id = id.getAttribute('id');
-
             }
 
             if (id in this._.registry) {
                 this.trigger('form-removed', { form: this._.registry[id] });
                 this._.registry[id].destroy();
                 delete this._.registry[id];
-
             }
         },
 
@@ -64,6 +61,9 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
                     }
                 }
             }
+
+            Arrays.createFrom(document.getElementsByTagName('form'))
+                .forEach(this.getForm.bind(this));
         },
 
         _forwardError: function (elem, msg) {
