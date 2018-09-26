@@ -25,7 +25,10 @@ _context.invoke('Nittro.Forms.Bridges.FormsDI', function(Nittro) {
                     .addSetup(function (formLocator) {
                         this.initForms(formLocator, config);
                     });
+            }
 
+            if (!builder.hasServiceDefinition('formErrorRenderer')) {
+                builder.addServiceDefinition('formErrorRenderer', 'Nittro.Forms.DefaultErrorRenderer()');
             }
         }
     });

@@ -4,7 +4,8 @@
             "src/Vendor.js",
             "src/FormData.js",
             "src/Form.js",
-            "src/Locator.js"
+            "src/Locator.js",
+            "src/DefaultErrorRenderer.js"
         ]
     },
     "bridges": {

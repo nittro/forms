@@ -1,9 +1,11 @@
 _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
-    var Locator = _context.extend('Nittro.Object', function () {
+    var anonId = 0;
+
+    var Locator = _context.extend('Nittro.Object', function (formErrorRenderer) {
         this._ = {
-            registry: {},
-            anonId: 0
+            errorRenderer: formErrorRenderer || null,
+            registry: {}
         };
 
         Vendor.addError = this._forwardError.bind(this);
@@ -17,7 +19,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
                 elem = id;
 
                 if (!elem.getAttribute('id')) {
-                    elem.setAttribute('id', 'frm-anonymous' + (++this._.anonId));
+                    elem.setAttribute('id', 'frm-anonymous' + (++anonId));
                 }
 
                 id = elem.getAttribute('id');
@@ -26,6 +28,7 @@ _context.invoke('Nittro.Forms', function (Form, Vendor, DOM, Arrays) {
 
             if (!(id in this._.registry)) {
                 this._.registry[id] = new Form(elem || id);
+                this._.registry[id].setErrorRenderer(this._.errorRenderer);
                 this.trigger('form-added', { form: this._.registry[id] });
             }
 
