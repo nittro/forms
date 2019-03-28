@@ -64,7 +64,9 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         validate: function (sender) {
-            this._.errorRenderer.cleanupErrors(this._.form);
+            if (this._.errorRenderer) {
+                this._.errorRenderer.cleanupErrors(this._.form);
+            }
 
             if (!Vendor.validateForm(sender || this._.form)) {
                 return false;
@@ -269,7 +271,9 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         _handleError: function (evt) {
-            this._.errorRenderer && this._.errorRenderer.addError(this._.form, evt.data.element, evt.data.message);
+            if (this._.errorRenderer) {
+                this._.errorRenderer.addError(this._.form, evt.data.element, evt.data.message);
+            }
 
             if (!this._.inLiveValidation && evt.data.element && typeof evt.data.element.focus === 'function') {
                 evt.data.element.focus();
@@ -277,7 +281,9 @@ _context.invoke('Nittro.Forms', function (DOM, Arrays, DateTime, FormData, Vendo
         },
 
         _handleBlur: function (evt) {
-            this._.errorRenderer && this._.errorRenderer.cleanupErrors(this._.form, evt.data.element);
+            if (this._.errorRenderer) {
+                this._.errorRenderer.cleanupErrors(this._.form, evt.data.element);
+            }
 
             if (DOM.getData(evt.data.element, 'validation-mode', this._.validationMode) === 'live') {
                 this._.inLiveValidation = true;
