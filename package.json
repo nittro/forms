@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "nittro-core": "^2.0.0",
-    "nette-forms": "^2.4.0"
+    "nette-forms": "^3.0"
   },
   "devDependencies": {
     "nittro-di": "^2.0.0",
